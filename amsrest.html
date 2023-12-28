@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Restaurant recommendations, Amsterdam</title>
+        <style>
+            th          { cursor:  pointer }
+            .desc:after { content: "\25b2" }
+            .asc:after  { content: "\25bc" }
+        </style>
+        <meta name="robots" content="none">
+        <meta name="referrer" content="no-referrer">
+        <meta http-equiv="content-security-policy" content="script-src
+            https://gist.github.com/wknapik/ed8a93a081e12dce2a96da8705e58a4b.js
+            'sha256-XXSWVlBL/wU5NBmZ+CYyQ292y89WEtm8SPchYa6stCk='
+            'sha256-OFvw/LAhLEkjEyTOQ3tmKwT/vBpeQgiGEJU0KN5+gGw='">
+    </head>
+    <body>
+        <script src="https://gist.github.com/wknapik/ed8a93a081e12dce2a96da8705e58a4b.js"></script>
+        <script>document.querySelectorAll(".gist-meta").forEach(e => e.remove())</script>
+        <script>"use strict";
+            const state = { col: 1, asc: true }
+
+            const tsort = (tbl, col, asc) => {
+                tbl.tHead.rows[0].cells[state.col].className = ""
+                state.col === col ? state.asc = !state.asc : [state.col, state.asc] = [col, true]
+                tbl.tHead.rows[0].cells[col].className = state.asc ? "asc" : "desc"
+
+                const cmpVal = x => x.cells[col].textContent.replace(/^The /, "").toLowerCase()
+                const cmp = (a, b) => cmpVal(a).localeCompare(cmpVal(b)) * (state.asc ? 1 : -1);
+                [...tbl.tBodies[0].rows].sort(cmp).forEach(val => tbl.tBodies[0].appendChild(val))
+            }
+
+            const table = document.querySelectorAll("table")[0];
+            [...table.tHead.rows[0].cells].forEach((th, col) => {
+                th.addEventListener("click", () => tsort(table, col))
+                th.className = state.col == col ? state.asc ? "asc" : "desc" : ""
+            })
+        </script>
+        <noscript>
+            <div>This page requires javascript, please enable it in your browser, or go to the source</div>
+            <br>
+        </noscript>
+        <div>source: <a href="https://gist.github.com/wknapik/ed8a93a081e12dce2a96da8705e58a4b">https://gist.github.com/wknapik/ed8a93a081e12dce2a96da8705e58a4b</a></div>
+    </body>
+</html>
